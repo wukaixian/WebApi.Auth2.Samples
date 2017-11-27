@@ -3,3 +3,7 @@
 ################################################################################
 
 /WebApi.Samples.Solution/packages
+/WebApi.Samples.Solution/WebApi.Sample/bin
+/WebApi.Samples.Solution/WebApi.Sample/obj/Debug
+/WebApi.Samples.Solution/WebApi.Sample.Tests/bin/Debug
+/WebApi.Samples.Solution/WebApi.Sample.Tests/obj/Debug
