@@ -1,1 +1,1 @@
-# WebApi.Auth2.Samples
+# ASP.NET Web Api OAuth2 Samples
