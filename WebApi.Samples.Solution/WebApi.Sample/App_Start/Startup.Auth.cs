@@ -17,9 +17,10 @@ namespace WebApi.Sample
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenEndpointPath = new PathString("/api/token"), 
                 AuthorizeEndpointPath = new PathString("/api/authorize"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromSeconds(3), 
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(20),
                 Provider = new OpenAuthorizationServerProvider(),
                 //AuthorizationCodeProvider = new OpenAuthorizationCodeProvider(),
+                
                 RefreshTokenProvider = new OpenRefreshTokenProvider() 
             };
 

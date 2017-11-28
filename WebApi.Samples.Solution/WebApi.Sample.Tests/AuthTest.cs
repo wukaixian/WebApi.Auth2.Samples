@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -79,10 +80,23 @@ namespace WebApi.Sample.Tests
             parmeters.Add("grant_type", "client_credentials");
             var resp = _client.PostAsync("/api/token", new FormUrlEncodedContent(parmeters)).Result;
             var accessToken = JObject.Parse(resp.Content.ReadAsStringAsync().Result).Value<string>("access_token");
+            var refreshToken = JObject.Parse(resp.Content.ReadAsStringAsync().Result).Value<string>("refresh_token");
+            Thread.Sleep(3000);
+
             _client.DefaultRequestHeaders.Authorization= new AuthenticationHeaderValue("Bearer", accessToken);
             resp = _client.GetAsync("/api/values").Result;
 
-            
+            if (resp.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                parmeters.Clear();
+                parmeters.Add("grant_type","refresh_token");
+                parmeters.Add("refresh_token",refreshToken);
+                resp=_client.PostAsync("/api/token", new FormUrlEncodedContent(parmeters)).Result;
+                accessToken = JObject.Parse(resp.Content.ReadAsStringAsync().Result).Value<string>("access_token");
+            }
+
+            _client.DefaultRequestHeaders.Authorization=new AuthenticationHeaderValue("bearer",accessToken);
+            resp=_client.GetAsync("/api/values").Result;
             Assert.Equal(HttpStatusCode.OK,resp.StatusCode);
 
             Trace.WriteLine(resp.Content.ReadAsStringAsync().Result);

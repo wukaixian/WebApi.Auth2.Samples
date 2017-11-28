@@ -30,7 +30,7 @@ namespace WebApi.Sample.Provider
         public override Task GrantClientCredentials(OAuthGrantClientCredentialsContext context)
         {
             var oAuthIdentity=new ClaimsIdentity(context.Options.AuthenticationType);
-            oAuthIdentity.AddClaim(new Claim(ClaimTypes.Name,"Client"));
+            oAuthIdentity.AddClaim(new Claim(ClaimTypes.Name, "Anonymous"));
             var ticket=new AuthenticationTicket(oAuthIdentity,new AuthenticationProperties());
             context.Validated(ticket);
 
@@ -59,7 +59,9 @@ namespace WebApi.Sample.Provider
             }
 
             var oAuthIdentity=new ClaimsIdentity(context.Options.AuthenticationType);
-            oAuthIdentity.AddClaim(new Claim(ClaimTypes.Name,context.UserName));
+            var claim=new Claim(ClaimTypes.Name,context.UserName);
+            claim.Properties[ClaimTypes.NameIdentifier] = context.ClientId;
+            oAuthIdentity.AddClaim(claim);
 
             context.Validated(oAuthIdentity);
         }
